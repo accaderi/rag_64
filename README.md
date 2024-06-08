@@ -5,7 +5,7 @@
 
 <h4 align="center">A web application in a Commodore 64 style to chat with documents from sources like PDFs, Wikipedia, PubMed, and web searches using local and online LLM models.</h4>
 <div align="center">
-<img src="screenshots/main.jpg" alt="Image 1" width="300" height="200" />
+<img src="screenshots/main.jpg" alt="Image 1" width="423" height="338" />
 <img src="screenshots/workflow.jpg" alt="Image 2" width="300" height="200" />
 <img src="screenshots/chat.jpg" alt="Image 3" width="300" height="200" />
 </div>
