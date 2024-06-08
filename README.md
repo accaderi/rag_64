@@ -156,8 +156,8 @@ This HTML template provides an interface for starting and managing chat sessions
 - Update all necessary API keys in the consumers.py file within the "#API keys" section.
 - PostgreSQL database; refer to the default details in the "rag_webapp/settings.py" in the `DATABASES` dictionary.
 - Modules in the requirements.txt `pip install -r requirements.txt`
-- After download or clone the repo start with migration `python manage.py migrate`
-- To run the app locally, run `python manage.py runserver`
+- After downloading or cloning the repository, start by running the migration command `python manage.py migrate`
+- To run the app locally, execute: `python manage.py runserver`
 
 ## Technical notes
 
