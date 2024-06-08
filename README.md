@@ -18,7 +18,7 @@
 </p>
 
 <div style="text-align:center">
-<p>Full video link: <a href="https://youtu.be/rj17jFagP0Q">https://youtu.be/rj17jFagP0Q</a></p>
+<p align="center">Full video link: <a href="https://youtu.be/rj17jFagP0Q">https://youtu.be/rj17jFagP0Q</a></p>
 </div>
 
 
