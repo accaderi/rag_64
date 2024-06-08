@@ -1,0 +1,134 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{% block title %}RAG_Menu{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="{% static 'app/styles.css' %}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+
+<style>
+    /* Custom CSS for the hamburger icon */
+    .navbar-toggler {
+        border: 3px solid;
+        border-radius: 0; /* No rounded edges */
+        margin-bottom: 0px;
+    }
+    .navbar-toggler-icon {
+        width: 24px;
+        height: 24px;
+    }
+
+    /* Dropdown positioning and size */
+    .c-dropdown-menu {
+    left: -125px;
+    width: 335px;
+    }
+
+    /* Dropdown styling */
+    .dropdown-item {
+    pointer-events: none; /* Prevent click events */
+    cursor: default; /* Set cursor to default */
+    background-color: transparent; /* Use transparent background */
+    text-align: center; /* Center the text */
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Horizontally center the content */
+    align-items: center; /* Vertically center the content */
+    }
+    .dropdown-item:hover {
+        background-color: transparent; /* No change on hover */
+    }
+</style>
+    
+</head>
+<body>
+    <div>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">
+                <span style="color: #022968; font-weight: bold;">RAG_</span><span style="color: #c10509; font-weight: bold;">64</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mr-auto">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><strong>{{ user.username }}</strong></a>
+                        </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'workflow' %}">Workflow</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'chat' chat_session='chat_session' %}">Chat</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'register' %}">Register</a>
+                        </li>
+                        {% endif %}
+                </ul>
+                        {% if user.is_authenticated %}
+                        <div class="navbar-nav ml-auto">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Workflow State
+                                </a>
+                                <div class="dropdown-menu c-dropdown-menu" aria-labelledby="navbarDropdown" style="border-radius: 0;">
+                                    <span class="dropdown-item {% if not switch_state.routing_switch %}inact{% endif %}">Routing</span>
+                                    <span class="dropdown-item {% if not switch_state.retriever_switch %}inact{% endif %}">Retriever</span>
+                                    <span class="dropdown-item {% if not switch_state.wikipedia_switch %}inact{% endif %}">Wikipedia Search</span>
+                                    <span class="dropdown-item {% if not switch_state.pubmed_switch %}inact{% endif %}">PubMed Search</span>
+                                    <span class="dropdown-item {% if not switch_state.web_search_switch or switch_state.web_search_switch == 'None' %}inact{% endif %}">Web Search: {% if not switch_state.web_search_switch or switch_state.web_search_switch == 'None' %}None{% elif switch_state.web_search_switch == 'Google' %}Google{% else %}Tavily{% endif %}</span>
+                                    <span class="dropdown-item">{{ switch_state.llm_switch }}</span>
+                                </div>
+                            </li>
+                        </div>
+                        {% endif %}
+            </div>
+        </nav>
+    </div>
+                
+    <div class="body">
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const currentLocation = window.location.pathname;
+
+        const navLinks = document.querySelectorAll(".navbar-nav .nav-item");
+
+        navLinks.forEach(function(link) {
+            const linkHref = link.querySelector(".nav-link").getAttribute("href");
+
+            if (currentLocation === linkHref) {
+                link.classList.add("active");
+            } else {
+                link.classList.remove("active");
+            }
+        });
+    });
+</script>
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+</html>

@@ -1,0 +1,338 @@
+{% extends "app/layout.html" %}
+
+{% block content %}
+{% load static %}
+<div class="cont">
+    {% csrf_token %}
+    <div>
+
+        <h4>Routing <small>(Check if provided docs are relevant.)</small></h4>
+        <button class="checkbox-button {% if switch_state.routing_switch %}true{% else %}false{% endif %}" type="button" id="routing_switch">{% if switch_state.routing_switch %}Yes{% else %}Nah{% endif %}</button>
+
+        <h4>Retriever <small>(Retrieve information from the docs.)</small></h4>
+        <input autocomplete="off" type="text" id="fileLocationInput" value="{% if switch_state.retrieve_dir %}{{files_to_retrieve_dir}}{% endif %}" placeholder="{% if switch_state.retrieve_dir %}{% else %}File(s) location{% endif %}" {% if switch_state.retrieve_dir %}disabled{% endif %}>    
+        <button class="checkbox-button {% if switch_state.retriever_switch %}true{% else %}false{% endif %}" type="button" id="retriever_switch">{% if switch_state.retriever_switch %}Yes{% else %}Nah{% endif %}</button>
+        
+        <h4>Wikipedia <small>(Search on Wikipedia.)</small></h4>
+        <button class="checkbox-button {% if switch_state.wikipedia_switch %}true{% else %}false{% endif %}" type="button" id="wikipedia_switch">{% if switch_state.wikipedia_switch %}Yes{% else %}Nah{% endif %}</button>
+        
+        <h4>Pubmed <small>(Search on Pubmed.)</small></h4>
+        <button class="checkbox-button {% if switch_state.pubmed_switch %}true{% else %}false{% endif %}" type="button" id="pubmed_switch">{% if switch_state.pubmed_switch %}Yes{% else %}Nah{% endif %}</button>
+    
+        <style>
+        .contr {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-top: 10px;
+        }
+        
+        .button-group {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-right: 0px;
+        }
+        
+        .checkbox-button {
+            display: block;
+            margin: 5px 0;
+        }
+        
+        p {
+            margin-bottom: 5px;
+        }
+        </style>
+        <h4>Web Search <small>(Search on the web.)</small></h4>
+            
+<!-- code to modify to center buttons and their text above START --> 
+    <!-- <p>None Google Tavily</p>
+        <button class="checkbox-button radio-group {% if switch_state.web_search_switch == 'None' %}true{% else %}false{% endif %}" type="button" id="webSearchNone">{% if switch_state.web_search_switch == 'None' %}Yes{% else %}Nah{% endif %}</button>
+        <button class="checkbox-button radio-group {% if switch_state.web_search_switch == 'Google' %}true{% else %}false{% endif %}" type="button" id="webSearchGoogle">{% if switch_state.web_search_switch == 'Google' %}Yes{% else %}Nah{% endif %}</button>
+        <button class="checkbox-button radio-group {% if switch_state.web_search_switch == 'Tavily' %}true{% else %}false{% endif %}" type="button" id="webSearchTavily">{% if switch_state.web_search_switch == 'Tavily' %}Yes{% else %}Nah{% endif %}</button>
+        <br> -->
+<!-- code to modify to center buttons and their text above END --> 
+
+<!-- solution of codeGPT with GPT4 and with human correction START --> 
+    <!-- 
+    <style>
+        .btn-container .checkbox-button {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            margin-right: 2em;
+            text-align: center;
+        }
+
+        button {
+            margin-right: 0px;
+        }
+
+        
+    </style>
+
+    <div class='btn-container'>
+    <div class="checkbox-button radio-group {% if switch_state.web_search_switch == 'None' %}true{% else %}false{% endif %}">
+        <div>None</div>
+        <button type="button" id="webSearchNone">{% if switch_state.web_search_switch == 'None' %}Yes{% else %}Nah{% endif %}</button>
+    </div>
+    <div class="checkbox-button radio-group {% if switch_state.web_search_switch == 'Google' %}true{% else %}false{% endif %}">
+        <div>Google</div>
+        <button type="button" id="webSearchGoogle">{% if switch_state.web_search_switch == 'Google' %}Yes{% else %}Nah{% endif %}</button>
+    </div>
+    <div class="checkbox-button radio-group {% if switch_state.web_search_switch == 'Tavily' %}true{% else %}false{% endif %}">
+        <div>Tavily</div>
+        <button type="button" id="webSearchTavily">{% if switch_state.web_search_switch == 'Tavily' %}Yes{% else %}Nah{% endif %}</button>
+    </div>
+    </div> -->
+<!-- solution of codeGPT with GPT4 and with human correction END -->
+
+<!-- solution of chatGPT4o and with human correction START -->
+
+    <div class="contr">
+        <div class="button-group web">
+            <p>None</p>
+            <button class="checkbox-button radio-group-websearch {% if not switch_state.web_search_switch or switch_state.web_search_switch == 'None' %}true{% else %}false{% endif %}" type="button" id="webSearchNone">{% if not switch_state.web_search_switch or switch_state.web_search_switch == 'None' %}Yes{% else %}Nah{% endif %}</button>
+        </div>
+        <div class="button-group web">
+            <p>Google</p>
+            <button class="checkbox-button radio-group-websearch {% if switch_state.web_search_switch == 'Google' %}true{% else %}false{% endif %}" type="button" id="webSearchGoogle">{% if switch_state.web_search_switch == 'Google' %}Yes{% else %}Nah{% endif %}</button>
+        </div>
+        <div class="button-group web">
+            <p>Tavily</p>
+            <button class="checkbox-button radio-group-websearch {% if switch_state.web_search_switch == 'Tavily' %}true{% else %}false{% endif %}" type="button" id="webSearchTavily">{% if switch_state.web_search_switch == 'Tavily' %}Yes{% else %}Nah{% endif %}</button>
+        </div>
+    </div>
+    <h4 style ='color:#b3ec91'>Models <small>(Choose the suitable model.)</small></h4>
+    <div class="contr">
+        <div class="button-group col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <p>Groq/llama3-8b-8192</p>
+            <button class="checkbox-button radio-group-model {% if not switch_state.llm_switch or switch_state.llm_switch == 'Groq/llama3-8b-8192' %}true{% else %}false{% endif %}" type="button" id="M_Groq/llama3-8b-8192">{% if not switch_state.llm_switch or switch_state.llm_switch == 'Groq/llama3-8b-8192' %}Yes{% else %}Nah{% endif %}</button>
+        </div>
+        <div class="button-group col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <p>Groq/llama3-70b-8192</p>
+            <button class="checkbox-button radio-group-model {% if switch_state.llm_switch == 'Groq/llama3-70b-8192' %}true{% else %}false{% endif %}" type="button" id="M_Groq/llama3-70b-8192">{% if switch_state.llm_switch == 'Groq/llama3-70b-8192' %}Yes{% else %}Nah{% endif %}</button>
+        </div>
+        <div class="button-group col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <p>Groq/mixtral-8x7b-32768</p>
+            <button class="checkbox-button radio-group-model {% if switch_state.llm_switch == 'Groq/mixtral-8x7b-32768' %}true{% else %}false{% endif %}" type="button" id="M_Groq/mixtral-8x7b-32768">{% if switch_state.llm_switch == 'Groq/mixtral-8x7b-32768' %}Yes{% else %}Nah{% endif %}</button>
+        </div>
+        <div class="button-group col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <p>Groq/gemma-7b-it</p>
+            <button class="checkbox-button radio-group-model {% if switch_state.llm_switch == 'Groq/gemma-7b-it' %}true{% else %}false{% endif %}" type="button" id="M_Groq/gemma-7b-it">{% if switch_state.llm_switch == 'Groq/gemma-7b-it' %}Yes{% else %}Nah{% endif %}</button>
+        </div>
+        <div class="button-group col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <p>Ollama/llama3-8b-8192</p>
+            <button class="checkbox-button radio-group-model {% if switch_state.llm_switch == 'Ollama/llama3-8b-8192' %}true{% else %}false{% endif %}" type="button" id="M_Ollama/llama3-8b-8192">{% if switch_state.llm_switch == 'Ollama/llama3-8b-8192' %}Yes{% else %}Nah{% endif %}</button>
+        </div>
+        <div class="button-group col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <p>Ollama/phi3-mini-128K</p>
+            <button class="checkbox-button radio-group-model {% if not switch_state or switch_state.llm_switch == 'Ollama/phi3-mini-128K' %}true{% else %}false{% endif %}" type="button" id="M_Ollama/phi3-mini-128K">{% if switch_state.llm_switch == 'Ollama/phi3-mini-128K' %}Yes{% else %}Nah{% endif %}</button>
+        </div>
+    </div>
+<!-- solution of chatGPT4o and with human correction END -->
+    </div>
+</div>
+<script>
+
+// Function to get previous <p> and <h4> elements before the clicked button
+    function getPreviousParagraphsAndHeaders(button, radio) {
+    const previousElements = [];
+    let previousElement = button.previousElementSibling;
+    while (previousElement) {
+        if (previousElement.tagName === 'H4') {
+            previousElements.unshift(previousElement); // Add <h4> to the beginning of the array
+            
+            break; // Stop traversal when <h4> is found
+        } else if (previousElement.tagName === 'P') {
+            previousElements.unshift(previousElement); // Add <p> to the beginning of the array
+            // If 'None' the <H4> title color need to be inactive but the button <p> element need to be highlighted with active color
+            if (previousElement && previousElement.textContent === 'None')
+            {
+                // Get the H4 element above the None button and change its color to inactive color then break
+                h4Element = previousElement.parentElement.parentElement.previousElementSibling
+                h4Element.style.color = '#867ade';
+                break;
+            }
+        } else if (previousElement.tagName === 'SMALL'){
+            previousElements.unshift(previousElement.parentElement);
+            break;
+        }
+        if (radio) {
+            previousElement = previousElement.previousElementSibling !== null ? previousElement.previousElementSibling : (() => {
+                previousElement = previousElement.parentElement.previousElementSibling !== null ? previousElement.parentElement.previousElementSibling.firstElementChild : previousElement.parentElement;
+                return previousElement
+            })(); 
+        } else {
+        previousElement = previousElement.previousElementSibling !== null ? previousElement.previousElementSibling : previousElement.parentElement;
+        }
+    }
+    return previousElements; // Return the array containing <p> and <h4> elements
+}
+
+
+// Function to change the color of the elements above the button based on button state
+function changeColors(button, isChecked, radio=false) {
+    const colorParagraph = isChecked ? 'white' : '#b3ec91';
+    const colorHeader = isChecked ? '#b3ec91' : '#867ade';
+    const previousElements = getPreviousParagraphsAndHeaders(button, radio);
+    previousElements.forEach(element => {
+        if (radio) {
+            element.style.color = '#867ade';
+        }else{
+            if (element.tagName === 'P') {
+                element.style.color = colorParagraph;
+            } else if (element.tagName === 'H4') {
+                element.style.color = colorHeader;
+            }
+        }
+    });
+}
+
+
+document.getElementById('fileLocationInput').onkeyup = function(e) {
+        if (e.key === 'Enter') {  // enter, return
+            document.getElementById('retriever_switch').click();
+        }
+    };
+
+$(document).ready(function() {
+    // Function to update the button appearance and text
+    function updateButton(button, isChecked) {
+        if (isChecked) {
+            button.classList.add('true');
+            button.classList.remove('false');
+            button.textContent = 'Yes';
+        } else {
+            button.classList.add('false');
+            button.classList.remove('true');
+            button.textContent = 'Nah';
+        }
+    };
+
+    function sendAjaxRequest(buttonId, buttonValue, filesToRetrieveDir) {
+        // Get the CSRF token from the meta tag in the HTML
+        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+        console.log('filesToRetrieveDir:', filesToRetrieveDir);
+        
+        let dataToSend;
+
+        if (filesToRetrieveDir) {
+            dataToSend = {
+                switchId: buttonId,
+                switchValue: buttonValue,
+                filesToRetrieveDir: filesToRetrieveDir
+            }
+        }else{
+            dataToSend = {
+                switchId: buttonId,
+                switchValue: buttonValue,
+            }
+        }
+
+        // Send AJAX request to update switch state
+        $.ajax({
+            url: '/update_switch_state/',
+            type: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken
+            },
+            data: dataToSend,
+            success: function(response) {
+                if (response.status === 'error') {
+                        const button = document.getElementById('retriever_switch')
+                        button.textContent = 'Nah';
+                        document.getElementById('fileLocationInput').disabled = false;
+                        updateButton(button, !button.classList.contains('true'));
+                        alert(response.message);
+
+                    }
+                console.log('Switch state updated successfully', 
+                response.status,
+                response.message);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error updating switch state:', error);
+            }
+        });
+    }
+
+    // Function to check if the button has a class containing substring
+    function checkAndGetRadioClass(button, substring) {
+            // Loop through the class list of the button
+            for (const className of button.classList) {
+                if (className.includes(substring)) {
+                    return className; // Return the class name if it contains substring
+                }
+            }
+            return null; // Return null if no class name contains substring
+        }
+
+    // Function to handle button click
+    function handleButtonClick(event) {
+        const button = event.target;
+        const isChecked = button.classList.contains('true');
+        let filesToRetrieveDir = '';
+
+        const btnClass = checkAndGetRadioClass(button, 'radio-group')
+        // Achieves radio buttons behaviour
+        if (btnClass) {
+            if (isChecked) {
+                return;
+            } else{
+                // For radio buttons, deactivate all in the group first
+                document.querySelectorAll('.' + btnClass).forEach(btn => {
+                updateButton(btn, false);
+            });
+            const buttons = document.querySelectorAll('.' + btnClass)
+            changeColors(buttons[buttons.length - 1], false, true);
+            }
+        };
+
+        updateButton(button, !isChecked);
+        changeColors(button, !isChecked);
+        
+        if (button.id == 'retriever_switch') {
+            const fileLocationInput = document.getElementById('fileLocationInput');
+            console.log(fileLocationInput.value, isChecked)
+            if (!isChecked) {
+                filesToRetrieveDir = fileLocationInput.value;
+                fileLocationInput.disabled = true
+            } else {
+                fileLocationInput.disabled = false
+            }
+            console.log('R', filesToRetrieveDir)
+        }
+        sendAjaxRequest(button.id, !isChecked ? 'true' : 'false', filesToRetrieveDir);
+    }
+
+    // Add event listeners to all checkbox buttons
+    document.querySelectorAll('.checkbox-button').forEach(button => {
+        // Add click event listener
+        button.addEventListener('click', handleButtonClick);
+    });
+
+    /* Send the files to retrieve dir to back-end when the page loads to check if the dir is changed.
+    This is important to change the 'files_retrieve_from_changed_dir' in the db to False
+    in order to avoid chroma db generation if the files to retriev information from have not changed */
+    if (document.getElementById('retriever_switch').classList.contains('true')) {
+        sendAjaxRequest('retriever_switch', 'true', document.getElementById('fileLocationInput').value);
+    }
+});
+
+// Load the checkbox-buttons' state when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+
+    document.querySelectorAll('.checkbox-button').forEach(button => {
+        const isChecked = button.classList.contains('true');
+        if (isChecked) {
+            changeColors(button, isChecked);
+        }
+    });
+});
+
+
+
+</script>
+{% endblock %}

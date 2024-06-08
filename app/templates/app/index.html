@@ -1,0 +1,89 @@
+<!-- index.html -->
+
+{% extends "app/layout.html" %}
+
+{% block content %}
+<style>
+    h2 {
+        color: #b3ec91;
+    }
+
+    h3 {
+        color: #ffff;
+    }
+</style>
+<body>
+    <div class="cont">
+            <h2>Overview</h2>
+            <p>This application is designed to facilitate user interaction with an AI system that leverages a Retrieval-Augmented Generation (RAG) approach. RAG is an AI methodology that enhances the capabilities of generative models by incorporating external knowledge retrieval. In this app, the AI system retrieves and utilizes relevant information from provided documents, enhancing the accuracy and relevance of responses. Additionally, the app includes options for users to extend their search to the web, Wikipedia, and PubMed, providing even more relevant information to complement the provided PDF if desired.</p>
+        
+            <h2>Key Features</h2>
+            <h3>User Registration and Identification System</h3>
+        
+            <h4>Password Generation:</h4>
+            <ul>
+                <li>Ensures users create strong passwords by adhering to specific security guidelines.</li>
+            </ul>
+        
+            <h4>Confirmation Mechanism:</h4>
+            <ul>
+                <li>Generates a confirmation link that users must visit to activate their account. This link is currently provided in the terminal for convenience during development.</li>
+            </ul>
+
+            
+            <h3>Workflow</h3>
+            <p>The workflow encompasses several modules that can be toggled on or off based on user preferences:</p>
+            <ul>
+                <li><strong>Routing:</strong> Ensures the provided documents are relevant to the user query.</li>
+                <li><strong>Retriever:</strong> Retrieves information from the provided PDF documents.</li>
+                <li><strong>Hybrid Search:</strong> Combines keyword search and semantic search for better retrieval results.
+                <br>Only accepts PDF files for retrieval.
+            </li>
+                <li><strong>Wikipedia:</strong> Searches for information on Wikipedia.</li>
+                <li><strong>PubMed:</strong> Searches for the 5 most relevant papers to the user query on PubMed.</li>
+                <li><strong>Web Search:</strong> Searches the web for additional information.</li>
+                <li><strong>Model Selection:</strong> Users can choose from various AI models to tailor the responses according to their needs.</li>
+            </ul>
+            
+            <h3>Chat Interface</h3>
+            
+            <h4>Chat Session Management:</h4>
+            <ul>
+                <li>Users can start new chat sessions and reload existing ones.</li>
+                <li>Each chat session has a unique title for easy identification and management.</li>
+                <li>The chat log is displayed in real-time, allowing users to view the conversation history.</li>
+                <li>SAM, the Commodore 64-style text-to-speech synthesizer, is available to read out loud the AI's answers for fun! :)</li>
+            </ul>
+        
+            <h4>Message Input and Submission:</h4>
+            <ul>
+                <li>Users can enter their queries in the message input field.</li>
+                <li>Messages are sent to the AI system via a WebSocket connection, ensuring real-time interaction.</li>
+            </ul>
+        
+            <h2>Technical Implementation</h2>
+        
+            <h3>Frontend:</h3>
+            <ul>
+                <li>HTML and JavaScript are used to create a dynamic and interactive user interface.</li>
+                <li>Real-time updates are facilitated through WebSocket connections.</li>
+                <li>CSS is used to style the interface and ensure a user-friendly experience.</li>
+            </ul>
+        
+            <h3>Backend:</h3>
+            <ul>
+                <li>The backend handles user registration, chat session management, and communication with the AI system.</li>
+                <li>AJAX is used to send asynchronous requests and update the switch states for various workflow modules.</li>
+                <li>CSRF tokens ensure secure AJAX requests.</li>
+            </ul>
+        
+            <h2>AI and RAG Methodology</h2>
+            <p>The AI system utilizes a Retrieval-Augmented Generation (RAG) approach, which enhances the response generation process by integrating external knowledge retrieval. This method ensures that the AI can provide accurate and contextually relevant answers by referencing the most pertinent information from provided documents and online sources.</p>
+        
+            <h2>Conclusion</h2>
+            <p>This application provides a comprehensive platform for users to interact with an AI system through a structured and feature-rich interface. By incorporating RAG methodology and hybrid search techniques, the app ensures that users receive accurate and relevant responses to their queries. The user-friendly interface, combined with robust backend functionality, makes this application a powerful tool for information retrieval and interaction.</p>
+
+    </div>
+</body>
+
+{% endblock %}

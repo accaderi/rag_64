@@ -1,0 +1,16 @@
+{% extends "app/layout.html" %}
+
+{% block content %}
+
+<body>
+    <div class="cont">
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="username" placeholder="Username"><br>
+        <input type="password" name="password" placeholder="Password"><br>
+        <button type="submit">Sign In</button><br>
+        <a href="{% url 'register' %}">Register</a>
+    </form>
+    </div>
+</body>
+{% endblock %}

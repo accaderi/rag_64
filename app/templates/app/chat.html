@@ -1,0 +1,224 @@
+{% extends "app/layout.html" %}
+
+{% block content %}
+{% load static %}
+<style>
+    .cont {
+    padding-left: 10px;
+}
+</style>
+<script src="{% static 'app/samjs.js' %}"></script>
+<div class="cont">
+<div class="one-row">
+<h2>Title:&nbsp;</h2>
+<h2 id="chatTitleDisplay">None</h2><br>
+</div>
+
+<input class="custom-caret" type="text" id="chatSessionTitle" placeholder="Enter Chat Session Title" size="100"><br>
+<div class="one-row">
+<button id="new-chat">Start New Chat</button>
+<button id="reload-chat">Reload Chat</button><br>
+</div>
+
+<textarea id="chat-log" cols="100" rows="20" contenteditable="true" disabled></textarea><br>
+
+<div class="input-container">
+<input id="chat-message-input" type="text" size="100" placeholder="" disabled><br>
+<div class="loader" style="display: none;"></div>
+</div>
+<button id="chat-message-submit" disabled>Send</button>
+<button id="chat-message-submit-SAM" disabled>Tell me SAM</button>
+<button id="stopPlaybackButton" disabled>chill SAM!</button>
+<!-- <div class="container">
+    <h1>SAM Text-to-Speech</h1>
+    <textarea id="text-input" placeholder="Enter text here..."></textarea>
+    <br>
+    <button onclick="speak()">Speak</button>
+</div> -->
+</div>
+<!-- <script src="https://unpkg.com/sam-js"></script> -->
+<script>
+    // const sam = new SamJs();
+    // function speak() {
+    //     const text = document.getElementById('text-input').value;
+    //     sam.speak(text);
+    // }
+
+    // Attach event listener to the stop button
+    
+    let chatSocket = null;
+    const newChatButton = document.getElementById('new-chat');
+    const chatSessionTitleInput = document.getElementById('chatSessionTitle');
+    const chatTitleDisplay = document.getElementById('chatTitleDisplay');
+    const messageInputDom = document.querySelector('#chat-message-input');
+    const messageSubmit = document.querySelector('#chat-message-submit');
+    const messageSubmitSAM = document.querySelector('#chat-message-submit-SAM');
+    const chillSAM = document.querySelector('#stopPlaybackButton');
+    const reloadChatButton = document.getElementById('reload-chat');
+    const chatLog = document.querySelector('#chat-log');
+    const loader = document.querySelector('.loader');
+    
+    // Set the initial value for the Chat Session Title input
+    function updateChatSessionTitle(title) {
+        chatTitleDisplay.textContent = title;
+        chatSessionTitleInput.value = '';
+        chatSessionTitleInput.style.setProperty('--placeholder-color', '#867ade');
+        chatSessionTitleInput.classList.add('custom-placeholder');
+    }
+    
+    newChatButton.addEventListener('click', () => {
+        const chatTitle = chatSessionTitleInput.value.trim();
+        if (chatTitle && chatTitle !== 'None') {
+            updateChatSessionTitle(chatTitle);
+            chatSessionTitleInput.blur();
+            
+            // Close the existing WebSocket connection if it exists
+            if (chatSocket) {
+                chatSocket.close();
+            }
+        
+            messageInputDom.placeholder = '';
+            loader.style.display = "block";
+            
+            // Initiate a new WebSocket connection
+            chatSocket = new WebSocket(
+                'ws://'
+            + window.location.host
+            + '/ws/chat/'
+            + chatTitle
+            + '/'
+        );
+        
+        // Clear the textarea
+        chatLog.value = '';
+        
+        chatSocket.onopen = () => {
+            console.log(chatSocket, chatTitle)
+            console.log('WebSocket connection opened');
+        };
+        
+        chatSocket.onmessage = function(e) {
+            console.log('Message got:', e.data);
+            const data = JSON.parse(e.data);
+            chatLog.value += `<${data.sender}> ${data.message}\n` + '\n';
+            loader.style.display = "none";
+            messageSubmit.disabled = false;
+            messageSubmitSAM.disabled = false;
+            messageInputDom.placeholder = 'Enter your query here...';
+            messageInputDom.disabled = false;
+            messageInputDom.focus();
+            if (data.sam == 'Yeah') {
+                const sam = new SamJs();
+                // sam.setSpeed('72');
+                // sam.setPitch('64');
+                // sam.setThroat('128');
+                // sam.setMouth('128');
+                sam.speak(data.message.replace(/[\n\r]/g, '').trimEnd());
+                chillSAM.disabled = false;
+            }
+        };
+        
+        chatSocket.onclose = (event) => {
+            chatLog.value += `<front-end> WebSocket connection closed, AI is disconnected: ${event.code}, ${event.reason}.\n` + '\n';
+                console.log('WebSocket connection closed:', event.code, event.reason);
+            };
+            
+        } else {
+            alert('Please enter a chat session title.');
+        }
+        
+    });
+    
+    // Handle enter key up for new chat
+    chatSessionTitleInput.focus();
+    chatSessionTitleInput.onkeyup = function(e) {
+        if (e.key === 'Enter') {  // enter, return
+            newChatButton.click();
+        }
+    }
+
+    // Handle enter key up for message
+    messageInputDom.onkeyup = function(e) {
+        if (e.key === 'Enter') {  // enter, return
+            messageSubmit.click();
+        }
+    };
+    
+    
+    function sendMessage(samValue) {
+        const message = messageInputDom.value;
+        
+        chatSocket.send(JSON.stringify({
+            'message': message,
+            'sam': samValue
+    }));
+    
+    messageInputDom.placeholder = '';
+    messageInputDom.value = '';
+    messageSubmit.disabled = true;
+    messageSubmitSAM.disabled = true;
+    messageInputDom.disabled = true;
+    chatLog.value += '<user> ' + message + '\n' + '\n';
+    loader.style.display = "block";
+    }
+    
+    messageSubmit.onclick = function(e) {
+    sendMessage('Nah');
+    };
+
+    messageSubmitSAM.onclick = function(e) {
+        sendMessage('Yeah');
+    };
+
+    reloadChatButton.addEventListener('click', () => {
+        const chatTitle = chatSessionTitleInput.value.trim();
+        if (chatTitle && chatTitle !== 'None') {
+            messageSubmit.disabled = true;
+            messageSubmitSAM.disabled = true;
+            messageInputDom.disabled = true;
+            messageInputDom.placeholder = '';
+            loader.style.display = "block";
+            updateChatSessionTitle(chatTitle);
+            reloadChatSession(chatTitle);
+        } else {
+            alert('Please enter a session title');
+        }
+    });
+    
+    function reloadChatSession(chatTitle) {
+        fetch('/chat/get_chat_session/' + chatTitle + '/')
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                    console.error(data.error);
+                } else {
+                    const messages = data.messages;
+                    loadChatSession(messages);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+        
+        function loadChatSession(messages) {
+            chatLog.value = ''; // Clear the text area
+            
+            messages.forEach(message => {
+                const { sender, message: text, timestamp } = message;
+                const formattedMessage = `<${sender}> ${text} (${new Date(timestamp).toLocaleString()})\n` + '\n';
+                chatLog.value += formattedMessage;
+            });
+        loader.style.display = "none";
+        messageInputDom.placeholder = '';
+    }
+
+    // Stop SAM
+    chillSAM.addEventListener("click", () => {
+            // Call the stopPlayback function when the button is clicked
+            stopPlayback();
+            chillSAM.disabled = true;
+        });
+
+</script>
+{% endblock %}

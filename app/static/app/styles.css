@@ -1,0 +1,157 @@
+/* * {
+  margin-bottom: 10px;
+} */
+
+/* Set up the font of the app */
+@font-face {
+    font-family: 'C64Font';
+    src: url('/static/app/font/Commodore Angled v1.2.ttf') format('truetype');
+  }
+
+/* Keep the navbar on the top of the screen */
+  .navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+/* Margins of elements */
+h4 {
+    margin-top: 18px;
+}
+
+button,
+input,
+textarea {
+    margin-bottom: 8px;
+  }
+
+button {
+      margin-right: 8px;
+  }
+
+/* Set the disabled text color of the input fields */
+  input[disabled] {
+    color: #867ade;
+  }
+
+.cont {
+    margin: 100px;
+    background-color: #483aaa;
+    padding: 10px;
+    padding-left: 20px;
+}
+
+.one-row {
+    display: flex;
+}
+
+/* The sender color */
+.sender-text {
+  color: #b3ec91;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    line-height: 1.5;
+    background-color: #867ade;
+    color: #867ade; /* Set font color for the entire page */
+    font-family: 'C64Font', monospace;
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: none;
+  }
+  
+input, textarea {
+    background-color: transparent;
+    border: 2px solid #867ade;
+    caret-color: #b3ec91; /* Set cursor color */
+    text-rendering: optimizeSpeed;
+    /* border-radius: 4px; */
+    color: #867ade;
+    padding: 8px 12px;
+    box-sizing: border-box; /* Include padding and border in the element's total width */
+    width: 100%; /* Set the initial width to 80% of the viewport width */
+  }
+
+/* Set styles for the placeholder text */
+input::placeholder,
+textarea::placeholder {
+    color: #ccc; /* Set placeholder text color to gray */
+  }
+
+/* Set styles for the active input field */
+input:focus,
+textarea:focus {
+    border: 6px solid #867ade; /* Thicker border with the same color for active state */
+    outline: none; /* Remove the default outline */
+  }
+
+/* Remove default active and focus styles */
+button:active, button:focus {
+  outline: none;
+  box-shadow: none; /* Remove any default box-shadow */
+}
+
+/* Required to change the placeholder text color with js code refer to chat.html */
+.custom-placeholder::placeholder {
+  color: var(--placeholder-color);
+}
+
+.input-container {
+  position: relative;
+  display: flex;
+}
+
+#chat-message-input {
+  flex: 1;
+}
+
+#chat-message-input:disabled::placeholder {
+  color: #867ade;
+}
+
+/* Loader... animation when app processing stg -> https://css-loaders.com/ */
+.loader {
+  position: absolute;
+  left: 0;
+  top: calc(-5%); /* Adjust loader vertically in the center of the chat.html query input field */
+  padding-left: 10px; /* Adjust padding for better alignment */
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-family: 'C64Font';
+  font-size: 30px;
+  color: #84c5cc;
+  clip-path: inset(0 3ch 0 0);
+  animation: l4 1s steps(4) infinite;
+  pointer-events: none; /* Make sure the loader does not block input field interaction */
+}
+/* Loader animation stuff */
+.loader:before {
+  content: "Loading...";
+}
+/* Loader animation stuff */
+@keyframes l4 {
+  to {
+    clip-path: inset(0 -1ch 0 0);
+  }
+}
+
+/* Dropdown workflow */
+.inact{
+  color: gray;
+}
+
+/* Styling for radio button checked state */
+/* #checkbox-button.checked {
+background-color: #483aaa;
+color: #ccc;
+} */
+
+/* Styling for radio button unchecked state */
+/* #checkbox-button.not-checked {
+background-color: red;
+color: white;
+} */
