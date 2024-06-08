@@ -4,11 +4,11 @@
 </h1>
 
 <h4 align="center">A web application in a Commodore 64 style to chat with documents from sources like PDFs, Wikipedia, PubMed, and web searches using local and online LLM models.</h4>
-
+<div align="center">
 <img src="screenshots/main.jpg" alt="Image 1" width="300" height="200" />
 <img src="screenshots/workflow.jpg" alt="Image 2" width="300" height="200" />
 <img src="screenshots/chat.jpg" alt="Image 3" width="300" height="200" />
-
+</div>
 <p align="center">
   <a href="#application-summary">Application Summary</a> •
   <a href="#key-features">Key Features</a> •
@@ -18,9 +18,6 @@
 </p>
 
 <div style="text-align:center">
-<video width="640" height="480" controls autoplay>
-  <source src="REAT_small_intro.mp4" type="video/mp4">
-</video>
 <p>Full video link: <a href="https://youtu.be/rj17jFagP0Q">https://youtu.be/rj17jFagP0Q</a></p>
 </div>
 
