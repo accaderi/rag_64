@@ -47,7 +47,7 @@ The workflow encompasses several modules that can be toggled on or off based on 
 - **Wikipedia**: Searches for information on Wikipedia.
 - **PubMed**: Searches for the 5 most relevant papers to the user query on PubMed.
 - **Web Search**: Searches the web for additional information.
-- **Model Selection**: Users can choose from various AI models to tailor the responses according to their needs.
+- **Model Selection**: Users can choose from various AI models to tailor the responses according to their needs. Available options include Groq models and local models using Ollama.
 
 The "Workflow State" dropdown in the upper right corner shows the latest updated workflow. A workflow is updated when the user opens the "Chat" page. 
 
