@@ -17,7 +17,7 @@
   <a href="#disclaimer">Disclaimer</a>
 </p>
 
-<p align="center">Full video link: <a href="[https://youtu.be/A6P-Kneo_Bw](https://youtu.be/A6P-Kneo_Bw)">https://youtu.be/A6P-Kneo_Bw</a></p>
+<p align="center">Full video link: <a href="https://youtu.be/A6P-Kneo_Bw">https://youtu.be/A6P-Kneo_Bw</a></p>
 
 
 ## Application Summary
